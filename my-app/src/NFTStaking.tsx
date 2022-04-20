@@ -8,7 +8,7 @@ import { AuthContext } from './context/authProvider';
 import { useSelector } from 'react-redux';
 import { state } from './state/types';
 import { PageLoader } from './components/loader';
-import { approveSend, fetchReward, fetchTokenData, fromWei, getAccount, harvestSend, stakeSend, toWei, unStakeSend } from './utils/contractHelper';
+import { approveSend, fetchNFTData, fetchReward, fetchTokenData, fromWei, getAccount, harvestSend, secToDay, stakeSend, toWei, unStakeSend } from './utils/contractHelper';
 import BigNumber from 'bignumber.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,18 +27,8 @@ function NFTStaking() {
 
   const stakeAmount = React.useRef<HTMLInputElement>(null);
   const unStakeAmount = React.useRef<HTMLInputElement>(null);
+  
   const [error, setError] = useState<{ stake: boolean, unStake: boolean, harvest: boolean }>({ stake: false, unStake: false, harvest: false })
-
-  const maxAmount = (flag: boolean = true) => {
-    if (!isConnected) return false;
-    if (flag) {
-      setError({ ...error, stake: false });
-    } else {
-      setError({ ...error, unStake: false });
-
-    }
-  }
-
   const update = async () => {
     if (window.ethereum == undefined || !window.ethereum.isMetaMask) {
       return false;
@@ -65,6 +55,7 @@ function NFTStaking() {
     const walletAddress: string[] = await getAccount(web3Provider);
     setWallet(walletAddress[0]);
     await setTokenData(await fetchTokenData(web3Provider, chainId));
+    await fetchNFTData(web3Provider, chainId);
   }
 
   const notify = (message: string, flag: boolean = false) => flag ? toast.success(message) : toast.error(message);
@@ -203,15 +194,15 @@ function NFTStaking() {
             <div className="col-lg-12 pl-25 md-pl-15">
               <div className="project-item project-value-inner d-flex justify-content-between align-items-center mb-30">
                 <div className="project-value">
-                  <h3 className="mb-15">{tokenData.tvl ? fromWei(tokenData.tvl) : "--"}</h3>
+                  <h3 className="mb-15">{NFTData.tvl ? fromWei(NFTData.tvl) : "--"}</h3>
                   <span>Total Value Locked</span>
                 </div>
                 <div className="project-value">
-                  <h3 className="mb-15">{tokenData.stakingInfo ? tokenData.stakingInfo.ApyRate : "--"} %</h3>
+                  <h3 className="mb-15">{NFTData ? `200` : "--"} %</h3>
                   <span>Apy</span>
                 </div>
                 <div className="project-value">
-                  <h3 className="mb-15">{tokenData.stakers ? tokenData.stakers : "--"}</h3>
+                  <h3 className="mb-15">{NFTData.stakers ? NFTData.stakers : "--"}</h3>
                   <span>Number of Stakers</span>
                 </div>
                 <div className="project-value-image">
@@ -223,12 +214,12 @@ function NFTStaking() {
               <div className="project-item">
                 <div className="project-info border-bottom-2">
                   <h4 className="mb-15">Total Reward</h4>
-                  <h3 className="mb-15 d-inline col-sm-6">{tokenData.reward ? fromWei(tokenData.reward) : "--"}<span className="buse">CRO</span></h3>
+                  <h3 className="mb-15 d-inline col-sm-6">{NFTData.reward ? fromWei(NFTData.reward) : "--"}<span className="buse">CRO</span></h3>
                   <button className='d-inline col-sm-6 harvest-btn' onClick={() => { harvest() }}>Harvest</button>
                 </div>
                 <ul className="date-listing mb-35">
                   {
-                    <StakeTabLink minDays={tokenData.stakingInfo ? tokenData.stakingInfo.minDays : 0} />
+                    <StakeTabLink minDays={NFTData.minDays ? secToDay(NFTData.minDays) : 0} />
                   }
                 </ul>
                 <div className="project-content">
@@ -237,7 +228,7 @@ function NFTStaking() {
                   } */}
                 </div>
                 <div className="project-form-list">
-                  <h5 className="mb-18">Balance:  {tokenData.balance ? fromWei(tokenData.balance) : "--"}CRO</h5>
+                  <h5 className="mb-18">Balance:  {NFTData.balance ? NFTData.balance.length : "--"}CRO</h5>
                   <div className="balance-form-area mb-27">
                     <div className="white-shape-small approve" onClick={() => { stake() }}>
                       <input type="submit" value="STAKE" />
@@ -251,9 +242,14 @@ function NFTStaking() {
                       <CCol sm="auto mb-4"><NFTCard id={1} ImgUrl={"../assets/images/LatestNews/News_Img1.png"} /> </CCol>
                       <CCol sm="auto mb-4"><NFTCard id={2} ImgUrl={"../assets/images/LatestNews/News_Img1.png"} /> </CCol>
                       <CCol sm="auto mb-4"><NFTCard id={3} ImgUrl={"../assets/images/LatestNews/News_Img1.png"} /> </CCol>
+                      {NFTData.stakedBalance ? NFTData.stakedBalance.map((value, index) => {
+                        return (
+                          <CCol sm="auto mb-4" key={index}><NFTCard key={index} id={parseInt(value.toString())} ImgUrl={"../assets/images/LatestNews/News_Img1.png"} /> </CCol>
+                        )
+                      }):`No Staked Tokens`} 
                     </CRow>
                   </CContainer>
-                  <h5 className="mb-18">Staked: {tokenData.stakedBalance ? fromWei(tokenData.stakedBalance) : "--"} CRO</h5>
+                  <h5 className="mb-18">Staked: {NFTData.stakedBalance ? NFTData.stakedBalance.length : "--"} CRO</h5>
                   <div className="balance-form-area mb-27">
                     <CContainer>
                       <CRow>

@@ -18,20 +18,17 @@ export interface tokenState {
 }
 
 export interface NFTState {
-    balance: BigNumber,
-    BalanceURIs: number[],
+    balance: BigNumber[],
+    balanceURIs: number[],
     StakeURIs: number[],
-    stakedBalance: BigNumber,
-    tvl: BigNumber,
-    unStakeFee:BigNumber,
-    isLocked: string,
+    stakedBalance: BigNumber[],    
+    tvl: BigNumber,    
     stakers: number,
-    reward: BigNumber,
-    stakingInfo: IStakeType
+    reward: BigNumber,    
     isConnected: boolean,
     wallet: string,
     loading: boolean,
-    rewardPerBlock: BigNumber
+    minDays: BigNumber,    
 }
 
 

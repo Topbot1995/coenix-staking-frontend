@@ -1,5 +1,5 @@
 import { CCardImageProps } from "@coreui/react/dist/components/card/CCardImage";
-import { tokenState } from "../state/types";
+import { NFTState, tokenState } from "../state/types";
 
 export interface IStakeType {
     minDays: number,
@@ -23,7 +23,7 @@ export interface IAuthContextState {
     setChainId: Function,
     tokenData: tokenState,
     setTokenData: Function,
-    NFTData: tokenState,
+    NFTData: NFTState,
     setNFTData: Function,
 }
 

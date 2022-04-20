@@ -5,11 +5,11 @@ import Web3 from "web3";
 import { MAIN_CAINID, MAIN_NET, PRODUCT_MODE, TEST_CAINID, TEST_NET, TEST_TOKEN_ADDR, TEST_TOKEN_STAKING_ADDR } from "../config/constants";
 import { AuthContext } from "../context/authProvider";
 import { useAppDispatch } from "../state/store";
-import { fetchTokenData, getAccount } from "../utils/contractHelper";
+import { fetchNFTData, fetchTokenData, getAccount } from "../utils/contractHelper";
 
 const Header = () => {
 
-    const { chainId, isConnected, setIsConnected, setWeb3Provider, tokenData, setTokenData, loaderShow, setLoaderShow, setWallet } = useContext(AuthContext);
+    const { chainId, isConnected, setIsConnected, setWeb3Provider, tokenData, setTokenData, NFTData, setNFTData, loaderShow, setLoaderShow, setWallet } = useContext(AuthContext);
 
     const [address, setAddress] = useState<string>("Connect");
 
@@ -40,7 +40,8 @@ const Header = () => {
         setIsConnected(true);
         const walletAddress: string[] = await getAccount(web3Provider);
         setWallet(walletAddress[0]);
-        await setTokenData(await fetchTokenData(web3Provider, chainId));
+        await setTokenData(await fetchTokenData(web3Provider, chainId));        
+        await setNFTData(await fetchNFTData(web3Provider, chainId))
     }
 
 
@@ -53,10 +54,9 @@ const Header = () => {
         return () => {
 
         }
-    }, [tokenData])
+    }, [tokenData, NFTData])
 
-    const shortenAddress = (address: string): string =>
-        `${address.substr(0, 6)}...${address.substr(
+    const shortenAddress = (address: string): string => `${address.substr(0, 6)}...${address.substr(
             address.length - 4,
             address.length,
         )}`;

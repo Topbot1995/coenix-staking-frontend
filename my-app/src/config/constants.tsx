@@ -17,12 +17,12 @@ export const MAIN_TOKEN_STAKING_ADDR:string = "0x88148635c5088474b925f469D74682f
 export const TEST_TOKEN_STAKING_ADDR:string = "0x88148635c5088474b925f469D74682f520Eb6F22";
 
 // nft contract address
-export const MAIN_NFT_ADDR:string = "";
-export const TEST_NFT_ADDR:string = "";
+export const MAIN_NFT_ADDR:string = "0x9c2bfABF66187F4D95b098700B394a5092f36c58";
+export const TEST_NFT_ADDR:string = "0x9c2bfABF66187F4D95b098700B394a5092f36c58";
 
 // nft staking contract address
-export const MAIN_NFT_STAKING_ADDR:string = "";
-export const TEST_NFT_STAKING_ADDR:string = "";
+export const MAIN_NFT_STAKING_ADDR:string = "0xE449eD1baf58CB7940117D6DBFC9e0c44f438CfE";
+export const TEST_NFT_STAKING_ADDR:string = "0xE449eD1baf58CB7940117D6DBFC9e0c44f438CfE";
 
 export const stakeTypeData:IStakeType = {
     minDays: 7,

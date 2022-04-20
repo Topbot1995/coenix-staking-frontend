@@ -1,0 +1,1 @@
+export {connectToken} from './tokenReducer';
